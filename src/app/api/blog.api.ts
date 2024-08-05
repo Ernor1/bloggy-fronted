@@ -7,17 +7,31 @@ type BlogData = {
     tags: string[]
 }
 
-export const createBlog = async (blog: BlogData) => {
-
+export const createBlog = async (blog: BlogData, file: any) => {
     try {
-        const response = await AuthApi.post(`${backend}/blog/create/by-logged-in-user`, blog);
+        const formData = new FormData();
+
+        // Append the blog data fields to FormData
+        for (const key in blog) {
+            formData.append(key, blog[key as keyof BlogData] as string);
+        }
+
+        // Append the file to FormData
+        console.log(file)
+        if (file) {
+            formData.append("file", file);
+        }
+
+        // Make the POST request with the FormData
+        const response = await AuthApi.post(`${backend}/blog/create/by-logged-in-user`, formData);
+
         return response.data;
-
     } catch (err) {
-        throw err
-
+        throw err;
     }
-}
+};
+
+
 export const getAllBlogs = async () => {
     try {
         const response = await api.get(`${backend}/blog/all`);
@@ -43,14 +57,33 @@ export const getAllBlogsByTag = async (id: any) => {
     }
 }
 
-export const updateBlog = async (id: string | string[], book: BlogData) => {
+export const updateBlog = async (id: string | string[], blog: BlogData, file?: File) => {
     try {
-        const response = await AuthApi.put(`${backend}/blog/update/${id}`, book);
+        const formData = new FormData();
+
+        // Append the blog data fields to FormData
+        for (const key in blog) {
+            formData.append(key, blog[key as keyof BlogData] as string);
+        }
+
+        // Append the file to FormData if it exists
+        if (file) {
+            formData.append("file", file);
+        }
+
+        // Make the PUT request with the FormData
+        const response = await AuthApi.put(`${backend}/blog/update/${id}`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+
         return response.data;
     } catch (err) {
         throw err;
     }
-}
+};
+
 
 export const deleteBlog = async (id: string) => {
     try {

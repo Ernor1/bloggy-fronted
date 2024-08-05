@@ -54,6 +54,7 @@ const Editor = ({ post }: { post: TPost | null }) => {
 
   const [imageFile, setImageFile] = useState<any>(null);
   const [isMounted, setIsMounted] = useState(false);
+  const[imgFile,setImgFile]=useState<any>(null)
 
   const ref = useRef<EditorJS | undefined>(undefined);
 
@@ -84,7 +85,7 @@ const Editor = ({ post }: { post: TPost | null }) => {
           content: blocks?.blocks[0].data.text,
           categories: Array.from(selectedCategory),
           tags: Array.from(selectedTag),
-        })
+        },imageFile)
         toast.success(res.message);
 
           router.push(
@@ -106,9 +107,13 @@ const Editor = ({ post }: { post: TPost | null }) => {
 
   const handleImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
+    if (file) {
+        setImageFile(file);
+    }
     const convertedImage = await convertImageToBase64(file);
-    setImageFile(convertedImage);
-  };
+    setImgFile(convertedImage);
+
+};
 
   const initEditor = useCallback(async () => {
     const EditorJS = (await import("@editorjs/editorjs")).default;
@@ -229,14 +234,14 @@ const Editor = ({ post }: { post: TPost | null }) => {
       <div className="max-md:px-4 h-full overflow-y-auto">
         <div className="max-w-[650px] m-auto">
           <div className="flex gap-8 ">
-            {!imageFile && (
+            {!imgFile && (
               <input
                 type="file"
                 {...register("image")}
                 onChange={handleImage}
               />
             )}
-            {imageFile && (
+            {imgFile && (
               <figure className="relative w-full h-[300px] pt-2">
                 <Button
                   isIconOnly
@@ -250,7 +255,7 @@ const Editor = ({ post }: { post: TPost | null }) => {
                   <Icon name="x" />
                 </Button>
                 <Image
-                  src={imageFile}
+                  src={imgFile}
                   width={100}
                   height={100}
                   alt="post image"
