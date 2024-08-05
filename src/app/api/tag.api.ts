@@ -1,4 +1,4 @@
-import { AuthApi, backend } from "./api"
+import { api, AuthApi, backend } from "./api"
 
 export type Tag = {
     name: string
@@ -19,7 +19,7 @@ export const createTag = async (tag: Tag) => {
 }
 export const getAllTags = async () => {
     try {
-        const response = await AuthApi.get(`${backend}/tag/all`);
+        const response = await api.get(`${backend}/tag/all`);
         return response.data.data;
     } catch (err) {
         throw err

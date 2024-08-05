@@ -9,7 +9,7 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 
 import Icon from "../Icon";
@@ -20,14 +20,22 @@ import moment from "moment";
 import { setFilterPost } from "@/redux/dashboardSlice";
 import { useAppDispatch } from "@/hooks/reduxHooks";
 import { useRouter } from "next/navigation";
+import { getAllBlogs } from "@/app/api/blog.api";
 
 type TDeletePayloadProp = {
   path: string;
   id: string;
 };
 
-const DashboardPosts = ({ dashboardData }: { dashboardData: TDashboard }) => {
+const DashboardPosts = ({ dashboardData }: { dashboardData: any }) => {
+  const[blogs,setBlogs] = useState<any[]>([]);
   const router = useRouter();
+  useEffect(()=>{
+    getAllBlogs().then((res)=>{
+      setBlogs(res)
+    })
+
+  },[])
 
   const dispatch = useAppDispatch();
 
@@ -49,35 +57,30 @@ const DashboardPosts = ({ dashboardData }: { dashboardData: TDashboard }) => {
     const value = e.target.value;
     dispatch(setFilterPost(value));
   };
+  console.log(dashboardData)
 
   return (
     <>
-      {dashboardData.posts.length > 0 ? (
+      {blogs.length > 0 ? (
         <div className="">
           <div className="flex justify-between items-center py-4">
             <h3 className="text-2xl font-semibold">Posts</h3>
             <div>
-              <Select
-                items={PostSort}
-                placeholder="Apply Filter"
-                aria-label="Sort parent"
-                radius="sm"
-                fullWidth
-                size="sm"
-                className="min-w-[200px]"
-                defaultSelectedKeys={["recently_created"]}
-                onChange={handleChangeSelect}
-              >
-                {(sort) => (
-                  <SelectItem aria-label={sort.label} key={sort.value}>
-                    {sort.label}
-                  </SelectItem>
-                )}
-              </Select>
+            <Button
+            as={Link}
+            href={"/new"}
+            variant="ghost"
+            color="primary"
+            className="border-1.5 group-hover:underline"
+            radius="sm"
+          >
+            Write Post
+          </Button>
+
             </div>
           </div>
           <div className="border rounded-md">
-            {dashboardData.posts.map((post) => (
+            {blogs.map((post:any) => (
               <div
                 key={post.id}
                 className="grid md:grid-cols-[60%_20%_20%] grid-cols-2 border-b p-4 hover:bg-default-50 items-center"
@@ -94,37 +97,14 @@ const DashboardPosts = ({ dashboardData }: { dashboardData: TDashboard }) => {
                       {moment(post.createdOn, moment.ISO_8601).format("MMM DD")}
                     </span>
                   </p>
-                </div>
-
-                  <div className="flex gap-2 items-center text-sm">
-                    <span className="flex gap-1">
-                      <Icon name="heart" strokeWidth={1.25} size={20} />0
-                    </span>
-                    <span className="flex gap-1">
-                      <Icon
-                        name="message-circle"
-                        strokeWidth={1.25}
-                        size={20}
-                      />
-                      {post._count.comments +
-                        post.comments.reduce(
-                          (acu, reply) => acu + reply._count.replies,
-                          0
-                        )}
-                    </span>
-                    <span className="flex gap-1">
-                      <Icon name="eye" strokeWidth={1.25} size={20} />
-                      {post.views}
-                    </span>
-                  </div>
-                
+                </div>                
                 <div className="justify-self-end">
                   <Button
                     size="sm"
                     variant="light"
                     onPress={() =>
                       router.push(
-                        `/${dashboardData.username}/${post.id}/edit`
+                        `/${post.author.username}/${post.id}/edit`
                       )
                     }
                   >

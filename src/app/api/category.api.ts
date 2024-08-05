@@ -1,4 +1,4 @@
-import { AuthApi, backend } from "./api"
+import { api, AuthApi, backend } from "./api"
 
 export type Category = {
     name: string
@@ -19,7 +19,7 @@ export const createCategory = async (category: Category) => {
 }
 export const getAllCategories = async () => {
     try {
-        const response = await AuthApi.get(`${backend}/category/all`);
+        const response = await api.get(`${backend}/category/all`);
         return response.data.data;
     } catch (err) {
         throw err

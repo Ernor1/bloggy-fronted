@@ -1,16 +1,37 @@
 "use client";
 
+import { getAllBlogs } from "@/app/api/blog.api";
+import { getAllCategories } from "@/app/api/category.api";
+import { getAllComments } from "@/app/api/comment.api";
+import { getAllTags } from "@/app/api/tag.api";
 import { useAppSelector } from "@/hooks/reduxHooks";
 import { Button, Select, SelectItem } from "@nextui-org/react";
 
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const DashboardFilter = () => {
   const router = useRouter();
   const params = useParams();
 
   const { dashboardData } = useAppSelector((state) => state.dashboard);
+  const[tags,setTags] = useState<any[]>([]);
+  const[categories,setCategories] = useState<any[]>([]);
+  const[comments,setComments] = useState<any[]>([]);
+  useEffect(()=>{
+
+    getAllTags().then((res)=>{
+      setTags(res)
+    })
+    getAllCategories().then((res)=>{
+      setCategories(res)
+    })
+    getAllBlogs().then((res)=>{
+      setComments(res)
+    })
+
+  },[])
 
   const handleSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     router.push(e.target.value);
@@ -28,70 +49,33 @@ const DashboardFilter = () => {
           className="flex justify-between items-center"
         >
           <span>Posts</span>
-          <span>{dashboardData && dashboardData._count.posts}</span>
+          <span>{comments.length}</span>
         </Button>
         <Button
           as={Link}
-          href="/dashboard/followers"
+          href="/dashboard/category"
           variant={params.filter === "followers" ? "flat" : "light"}
           radius="sm"
           fullWidth
           className="flex justify-between items-center"
         >
-          <span>Followers</span>
-          <span>{dashboardData && dashboardData._count.follower}</span>
+          <span>Categories</span>
+          <span>{categories.length}</span>
         </Button>
         <Button
           as={Link}
-          href="/dashboard/following_users"
+          href="/dashboard/tag"
           variant={params.filter === "following_users" ? "flat" : "light"}
           radius="sm"
           fullWidth
           className="flex justify-between items-center"
         >
-          <span>Following users</span>
-          <span>{dashboardData && dashboardData._count.following}</span>
+          <span>Tags</span>
+          <span>{tags.length}</span>
         </Button>
-        <Button
-          as={Link}
-          href="/dashboard/following_tags"
-          variant={params.filter === "following_tags" ? "flat" : "light"}
-          radius="sm"
-          fullWidth
-          className="flex justify-between items-center"
-        >
-          <span>Following tags</span>
-          <span>{dashboardData && dashboardData._count.followingTags}</span>
-        </Button>
+
       </aside>
-      <div className="md:hidden">
-        <Select
-          items={FilterLinks}
-          placeholder="Apply Filter"
-          aria-label="Sort parent"
-          radius="sm"
-          fullWidth
-          size="sm"
-          className="min-w-[200px]"
-          selectedKeys={
-            params.filter === "followers"
-              ? ["/dashboard/followers"]
-              : params.filter === "following_users"
-              ? ["/dashboard/following_users"]
-              : params.filter === "following_tags"
-              ? ["/dashboard/following_tags"]
-              : ["/dashboard"]
-          }
-          defaultSelectedKeys={["/dashboard"]}
-          onChange={handleSelectionChange}
-        >
-          {(sort) => (
-            <SelectItem aria-label={sort.label} key={sort.path}>
-              {sort.label}
-            </SelectItem>
-          )}
-        </Select>
-      </div>
+
     </>
   );
 };

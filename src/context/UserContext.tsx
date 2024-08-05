@@ -5,12 +5,13 @@ import { deleteCookie, getCookie } from 'cookies-next';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { getProfile } from '@/app/api/auth.api';
+import { any } from 'zod';
 
 
 
 interface GlobalContextProps {
-  user: User | null;
-  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  user:any;
+  setUser: React.Dispatch<React.SetStateAction<any>>;
   loading: boolean;
 }
 
@@ -23,13 +24,13 @@ export type User={
   }
 
 const GlobalContext = createContext<GlobalContextProps>({
-  user: null,
+  user: any,
   setUser: () => {},
   loading: true,
 });
 
 export const UserContextProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [init, setInit] = useState(true);
   const pathname = usePathname();

@@ -2,7 +2,7 @@ import { TUser } from "@/lib/types";
 import { createSlice } from "@reduxjs/toolkit";
 
 type TInitialState = {
-  user: TUser | null;
+  user: any;
   authStatus: boolean;
 };
 
