@@ -112,10 +112,9 @@ const RightAside = () => {
           developers. With you every step of your journey.
         </CardHeader>
         <CardBody>
-          Built using Nextjs, typescript, prisma, mongoDB, tailwindCSS, NextUI
-          and editorjs .
+          Built using Nextjs, typescript
         </CardBody>
-        <CardFooter>Made with love and Nextjs. BLOGGY blog © 2023.</CardFooter>
+        <CardFooter>Made with love and Nextjs. BLOGGY blog © 2024.</CardFooter>
       </Card>
     </aside>
   );
