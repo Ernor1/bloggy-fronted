@@ -1,4 +1,4 @@
-import { AuthApi, backend } from "./api"
+import { api, AuthApi, backend } from "./api"
 
 type CommentData = {
     id?: string
@@ -21,7 +21,7 @@ export const createComment = async (comment: any) => {
 }
 export const getAllComments = async () => {
     try {
-        const response = await AuthApi.get(`${backend}/comment/all`);
+        const response = await api.get(`${backend}/comment/all`);
         return response.data.data;
     } catch (err) {
         throw err
@@ -57,7 +57,7 @@ export const getComment = async (id: string) => {
 
 export const getCommentsByPostId = async (id: string) => {
     try {
-        const response = await AuthApi.get(`${backend}/comment/getByBlog/${id}`);
+        const response = await api.get(`${backend}/comment/getByBlog/${id}`);
         return response.data.data;
     } catch (err) {
         throw err;

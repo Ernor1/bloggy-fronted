@@ -20,7 +20,7 @@ export const createBlog = async (blog: BlogData) => {
 }
 export const getAllBlogs = async () => {
     try {
-        const response = await AuthApi.get(`${backend}/blog/all`);
+        const response = await api.get(`${backend}/blog/all`);
         return response.data.data;
     } catch (err) {
         throw err
@@ -47,7 +47,7 @@ export const deleteBlog = async (id: string) => {
 
 export const getBlog = async (id: string) => {
     try {
-        const response = await AuthApi.get(`${backend}/blog/get/${id}`);
+        const response = await api.get(`${backend}/blog/get/${id}`);
         return response.data;
     } catch (err) {
         throw err;
