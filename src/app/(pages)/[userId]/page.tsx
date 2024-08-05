@@ -7,17 +7,22 @@ import { useAppSelector } from "@/hooks/reduxHooks";
 import { TUser } from "@/lib/types";
 import axios from "axios";
 import clsx from "clsx";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { notFound } from "next/navigation";
+import { getBlogsByAuthor } from "@/app/api/blog.api";
+import { getCommentsByUserId } from "@/app/api/comment.api";
 
 const Page = ({ params }: { params: { userId: string } }) => {
   const { moreInfo } = useAppSelector((state) => state.user);
+  const { user } = useAppSelector((state) => state.auth);
+  console.log(moreInfo)
+  const[comments,setComments] = useState<any[]>([]);
 
   const { data, isLoading, isError } = useQuery(["user", params.userId], {
-    queryFn: async (): Promise<TUser | null> => {
+    queryFn: async (): Promise<any> => {
       try {
-        const { data } = await axios.get(`/api/users/${params.userId}`);
+        const { data } = await getBlogsByAuthor(params.userId);
         return data;
       } catch (error: any) {
         console.log(error);
@@ -26,6 +31,13 @@ const Page = ({ params }: { params: { userId: string } }) => {
     },
     retry: 1,
   });
+  useEffect(() => {
+    getCommentsByUserId(user?.id).then((res) => {
+      console.log(res);
+      setComments(res);
+    });
+
+  },[user])
 
   if (isLoading) {
     return (
@@ -38,12 +50,13 @@ const Page = ({ params }: { params: { userId: string } }) => {
   if (isError) {
     notFound();
   }
+  console.log(data);
 
   return (
     <>
       {data && Object.entries(data).length > 0 && (
         <main className="bg-neutral-100">
-          <ProfileDetails user={data} />
+
           <section className="py-3 grid grid-cols-1 md:grid-cols-[250px_1fr] md:w-[80%] m-auto gap-4">
             <aside>
               <div
@@ -56,25 +69,20 @@ const Page = ({ params }: { params: { userId: string } }) => {
                   <span>
                     <Icon strokeWidth={1.25} name="newspaper" />
                   </span>
-                  <span>{data.posts.length} posts published</span>
+                  <span>{data?.length} posts published</span>
                 </div>
                 <div className="flex items-center gap-4">
                   <span>
                     <Icon strokeWidth={1.25} name="message-circle" />
                   </span>
-                  <span>{data.comment.length} comments written </span>
+                  <span>{comments.length} comments written </span>
                 </div>
-                <div className="flex items-center gap-4">
-                  <span>
-                    <Icon strokeWidth={1.25} name="hash" />
-                  </span>
-                  <span> {data.followingTags.length} tags followed</span>
-                </div>
+
               </div>
             </aside>
             <div>
-              {data.posts.length > 0 ? (
-                data.posts.map((post) => <PostCard post={post} key={post.id} />)
+              {data.length > 0 ? (
+                data.map((post:any) => <PostCard post={post} key={post.id} />)
               ) : (
                 <div className="p-4 rounded-md bg-white">
                   @{data.username} has not published any post yet!

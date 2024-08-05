@@ -1,5 +1,6 @@
 "use client";
 
+import { deleteBlog } from "@/app/api/blog.api";
 import { useAppSelector } from "@/hooks/reduxHooks";
 import { TPost } from "@/lib/types";
 import {
@@ -38,9 +39,7 @@ const DeletePostModal = ({
   const queryClient = useQueryClient();
 
   const deletePost = async () => {
-    const { data } = await axios.delete(
-      `/api/posts/${post.path}?id=${post.id}`
-    );
+    const  data  = await deleteBlog(post.id);
     return data;
   };
 

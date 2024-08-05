@@ -16,7 +16,7 @@ import Icon from "../Icon";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHooks";
 
 import Link from "next/link";
-import { navLinks } from "./SideNav";
+
 import NavbarProfile from "./NavbarProfile";
 import SearchInput from "../search/SearchInput";
 import LoadingBar from "react-top-loading-bar";
@@ -28,6 +28,24 @@ const Navbar = () => {
 
   const { authStatus } = useAppSelector((state) => state.auth);
   const { progress } = useAppSelector((state) => state.common);
+  const { user } = useAppSelector((state) => state.auth);
+  const navLinks = [
+   {
+     id: 1,
+     label: "Home",
+     path: "/",
+     icon: <Icon name="home" strokeWidth={1.25} />,
+   },
+ 
+   {
+     id: 2,
+     label: "Your Blogs",
+     path: `/${user?.username}`,
+     icon: <Icon name="scroll-text" strokeWidth={1.25} />,
+   },
+ 
+ 
+ ];
 
   return (
     <>

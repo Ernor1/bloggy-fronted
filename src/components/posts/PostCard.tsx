@@ -63,19 +63,9 @@ const PostCard = ({ post }: { post: TPost }) => {
                 </Link>
               </h3>
               <div className="pt-2">
-                <Button size="sm" variant="light">
-                  #Javascript
-                </Button>
-                <Button size="sm" variant="light">
-                  #React.js
-                </Button>
-                <Button size="sm" variant="light">
-                  #Next.js
-                </Button>
-                <Button size="sm" variant="light">
-                  #Typescript
-                </Button>
-              </div>
+                <p>{post.content}</p>
+                </div>
+
             </div>
             {post.image !== null && (
               <figure className="max-md:hidden flex-1 w-full h-full">
@@ -92,12 +82,11 @@ const PostCard = ({ post }: { post: TPost }) => {
         </CardBody>
         <CardFooter className="justify-between">
           <div className="flex items-center gap-4">
-            <div>5 Reacts</div>
             <Button
               className="flex items-center gap-2"
               variant="light"
               as={Link}
-              href={`/${post.author.username}/${post.path}#comments`}
+              href={`/${post.author.username}/${post.id}#comments`}
             >
               <Icon name="message-circle" strokeWidth={1.25} />
               <span>

@@ -67,7 +67,7 @@ const PostArticle = ({ post }: { post: TPost }) => {
                   className=""
                   size="sm"
                   onPress={() =>
-                    router.push(`/${post.author.username}/${post.path}/edit`)
+                    router.push(`/${post.author.username}/${post.id}/edit`)
                   }
                 >
                   Edit
@@ -93,13 +93,13 @@ const PostArticle = ({ post }: { post: TPost }) => {
       <Comments post={post} />
 
       {/* ===DELETE MODAL=== */}
-      {/* <DeletePostModal
+      <DeletePostModal
         isOpen={isOpen}
         onClose={onClose}
         onOpenChange={onOpenChange}
         post={post}
         type="single post"
-      /> */}
+      />
     </>
   );
 };

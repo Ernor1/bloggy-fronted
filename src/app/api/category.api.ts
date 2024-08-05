@@ -25,6 +25,14 @@ export const getAllCategories = async () => {
         throw err
     }
 }
+export const getCategoriesByPostId = async (id: string) => {
+    try {
+        const response = await AuthApi.get(`${backend}/category/all/by-blog/${id}`);
+        return response.data.data;
+    } catch (err) {
+        throw err;
+    }
+}
 
 export const updateCategory = async (id: string, category: Category) => {
     try {

@@ -2,8 +2,28 @@ import { Button } from "@nextui-org/react";
 import Link from "next/link";
 import React from "react";
 import Icon from "../Icon";
+import { useAppSelector } from "@/hooks/reduxHooks";
 
 const SideNav = () => {
+  const { user } = useAppSelector((state) => state.auth);
+   const navLinks = [
+    {
+      id: 1,
+      label: "Home",
+      path: "/",
+      icon: <Icon name="home" strokeWidth={1.25} />,
+    },
+  
+    {
+      id: 2,
+      label: "Your Blogs",
+      path: `/${user?.username}`,
+      icon: <Icon name="scroll-text" strokeWidth={1.25} />,
+    },
+  
+  
+  ];
+  
   return (
     <nav className="sticky top-[90px] left-0 flex justify-between flex-col h-[calc(100vh_-_110px)]">
       <ul>
@@ -71,24 +91,4 @@ const SideNav = () => {
 
 export default SideNav;
 
-export const navLinks = [
-  {
-    id: 1,
-    label: "Home",
-    path: "/",
-    icon: <Icon name="home" strokeWidth={1.25} />,
-  },
 
-  {
-    id: 2,
-    label: "Categories",
-    icon: <Icon name="scroll-text" strokeWidth={1.25} />,
-  },
-
-  {
-    id: 3,
-    label: "Tags",
-    path: "/tags",
-    icon: <Icon name="tag" strokeWidth={1.25} />,
-  }
-];

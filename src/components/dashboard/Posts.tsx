@@ -95,11 +95,7 @@ const DashboardPosts = ({ dashboardData }: { dashboardData: TDashboard }) => {
                     </span>
                   </p>
                 </div>
-                {post.type === "DRAFT" ? (
-                  <Chip radius="sm" color="warning" variant="flat">
-                    {post.type}
-                  </Chip>
-                ) : (
+
                   <div className="flex gap-2 items-center text-sm">
                     <span className="flex gap-1">
                       <Icon name="heart" strokeWidth={1.25} size={20} />0
@@ -121,14 +117,14 @@ const DashboardPosts = ({ dashboardData }: { dashboardData: TDashboard }) => {
                       {post.views}
                     </span>
                   </div>
-                )}
+                
                 <div className="justify-self-end">
                   <Button
                     size="sm"
                     variant="light"
                     onPress={() =>
                       router.push(
-                        `/${dashboardData.username}/${post.path}/edit`
+                        `/${dashboardData.username}/${post.id}/edit`
                       )
                     }
                   >

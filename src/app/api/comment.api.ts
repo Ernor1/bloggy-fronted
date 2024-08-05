@@ -64,7 +64,7 @@ export const getCommentsByPostId = async (id: string) => {
     }
 }
 
-export const getCommentsByUserId = async (id: string) => {
+export const getCommentsByUserId = async (id: any) => {
     try {
         const response = await AuthApi.get(`${backend}/comment/getByUser/${id}`);
         return response.data.data;

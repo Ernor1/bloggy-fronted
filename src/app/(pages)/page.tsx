@@ -4,14 +4,16 @@ import RightAside from "@/components/RightAside";
 import SideNav from "@/components/navbar/SideNav";
 import PostCard from "@/components/posts/PostCard";
 import { TPost } from "@/lib/types";
-import { Button, Skeleton } from "@nextui-org/react";
+import { Button, Select, SelectItem, Skeleton } from "@nextui-org/react";
 import axios from "axios";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useAppDispatch } from "@/hooks/reduxHooks";
 import { setProgress } from "@/redux/commonSlice";
 import { useInView } from "react-intersection-observer";
-import React, { useEffect } from "react";
-import { getAllBlogs } from "../api/blog.api";
+import React, { useEffect, useState } from "react";
+import { getAllBlogs, getAllBlogsByCategory, getAllBlogsByTag } from "../api/blog.api";
+import { getAllCategories } from "../api/category.api";
+import { getAllTags } from "../api/tag.api";
 
 type PostWithTotalPage = {
   posts: TPost[];
@@ -23,12 +25,40 @@ export default function Home() {
   const { ref, inView } = useInView();
 
   const dispatch = useAppDispatch();
+  const[categories,setCategories]=useState([])
+  const[tags,setTags]=useState([])
+  const[selectedCategory,setSelectedCategory]=useState<any>(null)
+  const[selectedTag,setSelectedTag]=useState<any>(null)
+  useEffect(()=>{
+    getAllCategories().then((res) => {
+      setCategories(res)
+    })
+    getAllTags().then((res) => {
+      setTags(res)
+    })
 
-  const { data, isLoading, error, hasNextPage, fetchNextPage } =
+
+  },[])
+
+  const { data, isLoading, error, hasNextPage, fetchNextPage,refetch } =
     useInfiniteQuery({
       queryKey: ["posts"],
       queryFn: async ({ pageParam = 1 }): Promise<PostWithTotalPage> => {
-        const data  = await getAllBlogs()
+        let data:any  = []
+        if(selectedCategory){
+          data= await getAllBlogsByCategory(Array.from(selectedCategory)[0]);
+          console.log(data)
+        }
+        else if(selectedTag){
+          console.log(selectedTag)
+          console.log(selectedCategory)
+          data= await getAllBlogsByTag(Array.from(selectedTag)[0]);
+          console.log("data")
+          console.log(data)
+        }
+        else{
+          data = await getAllBlogs();
+        }
         console.log(data);
         return data;
       },
@@ -43,6 +73,7 @@ export default function Home() {
       refetchOnWindowFocus: false,
     });
 
+
   if (isLoading) {
     dispatch(setProgress(80));
   }
@@ -52,6 +83,9 @@ export default function Home() {
       fetchNextPage();
     }
   }, [inView, fetchNextPage]);
+  useEffect(() => {
+    refetch();
+  }, [selectedCategory,selectedTag]);
 
 
   return (
@@ -62,9 +96,40 @@ export default function Home() {
         </aside>
         <main>
           <header className="mb-2">
-            <Button variant="light">For you</Button>
-            <Button variant="light">Latest</Button>
-            <Button variant="light">Trending</Button>
+            <Select
+            size="sm"
+            items={tags}
+            selectedKeys={selectedTag}
+            label="Tag"
+            placeholder="Filter by tag"
+            className="max-w-xs mr-2"
+            // onChange={setSelectedTag}
+            onSelectionChange={setSelectedTag}
+            onChange={()=>{
+              setSelectedCategory(null)
+            }}
+            >
+              {(tag:any) => <SelectItem value={tag.id}  key={tag?.id}>{tag?.name}</SelectItem>}
+          </Select>
+          <Select
+          size="sm"
+            items={categories}
+            selectedKeys={
+              selectedCategory
+            }
+            label="Category"
+            placeholder="Filter by category"
+            className="max-w-xs"
+            // onChange={setSelectedTag}
+            onSelectionChange={
+              setSelectedCategory
+            }
+            onChange={()=>{
+              setSelectedTag(null)
+            }}
+            >
+              {(category:any) => <SelectItem value={category.id}  key={category?.id}>{category?.name}</SelectItem>}
+          </Select>
           </header>
           {/* ===POST CARD SKELETON=== */}
           {isLoading && (

@@ -26,6 +26,22 @@ export const getAllBlogs = async () => {
         throw err
     }
 }
+export const getAllBlogsByCategory = async (id: any) => {
+    try {
+        const response = await api.get(`${backend}/blog/get/by-category/${id}`);
+        return response.data.data;
+    } catch (err) {
+        throw err
+    }
+}
+export const getAllBlogsByTag = async (id: any) => {
+    try {
+        const response = await api.get(`${backend}/blog/get/by-tag/${id}`);
+        return response.data.data;
+    } catch (err) {
+        throw err
+    }
+}
 
 export const updateBlog = async (id: string | string[], book: BlogData) => {
     try {

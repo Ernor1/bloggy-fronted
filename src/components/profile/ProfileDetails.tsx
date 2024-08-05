@@ -106,7 +106,7 @@ const ProfileDetails = ({ user }: { user: TUser }) => {
           <div className="text-small text-default-500 py-2 flex gap-3 items-center">
             <Icon name="cake" />
             <span>
-              joined on {moment(user.createdAt, moment.ISO_8601).format("l")}
+              joined on {moment(user.createdOn, moment.ISO_8601).format("l")}
             </span>
           </div>
         </div>

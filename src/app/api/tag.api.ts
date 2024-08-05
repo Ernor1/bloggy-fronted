@@ -25,6 +25,14 @@ export const getAllTags = async () => {
         throw err
     }
 }
+export const getTagsByPostId = async (id: string) => {
+    try {
+        const response = await AuthApi.get(`${backend}/tag/all/by-blog/${id}`);
+        return response.data.data;
+    } catch (err) {
+        throw err;
+    }
+}
 
 export const updateTag = async (id: string, tag: Tag) => {
     try {
