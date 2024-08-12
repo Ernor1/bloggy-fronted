@@ -58,7 +58,7 @@ This is a blog application built with Next.js on the frontend. The application p
    \`\`\`bash
    yarn dev
    \`\`\`
-   Open [http://localhost:9000](http://localhost:9000) with your browser to see the result.
+   Open [http://localhost:9000](http://localhost:3000) with your browser to see the result.
 
 ## Usage
 
